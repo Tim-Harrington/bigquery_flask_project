@@ -1,30 +1,38 @@
-import os
 
-from flask import Flask
-from flask_restful import Api
+#Using Erin Mcmahon's Dash-App code as a baseline from her repo here https://github.com/erinmcmahon26/Dash-App/blob/main/main.py
+import dash
+from dash import Dash, dcc, html
 from google.cloud import bigquery
+import pandas as pd
+import plotly
+import plotly.express as px
 
+app = dash.Dash(__name__)
+server = app.server
 
-#Borrowing logic from Erin McMahon's code from week 3 demo discussion
-app = Flask(__name__)
-api = Api(app)
-
+# constructing a BQ client object
 client = bigquery.Client()
 
-@app.route("/")
-def query_data():
-    query = """
+query = """
     SELECT *
-    FROM bigquery-public-data.world_bank_health_population
-    LIMIT 10
-    """
-    query_job = client.query(query)
+    FROM ML.EXPLAIN_FORECAST(MODEL worldpop.yearly_pop,
+            STRUCT(10 AS horizon, 0.8 AS confidence_level))
+"""
 
-    df = query_job.to_dataframe()
-    json_object = df.to_json(orient='records')
+query_job = client.query(query) # make an API request
 
-    return json_object
+df = query_job.to_dataframe()
 
+fig = px.line(df, x='time_series_timestamp', y ='time_series_data')
 
-if __name__ == "__main__":
-    app.run(port=8080, host="0.0.0.0")
+app.layout = html.Div(children = [
+    html.H1("World Population Forecast"),
+    html.Div(children ='''An app to see what the expected world population will be each year over the next 10 years.'''),
+    dcc.Graph(
+        id = 'World Population Graph',
+        figure = fig
+    )
+])
+
+if __name__ == '__main__':
+    app.run_server(debug=True, host="0.0.0.0", port=8080)
