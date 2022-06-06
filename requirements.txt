@@ -21,4 +21,5 @@ dash-table
 dash-daq
 dash-renderer
 pandas
-
+Dash
+plotly_express
