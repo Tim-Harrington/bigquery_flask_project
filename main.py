@@ -13,18 +13,18 @@ client = bigquery.Client()
 
 @app.route("/")
 def query_data():
-        query = """
-            SELECT *
-                FROM bigquery-public-data.world_bank_health_population
-                    LIMIT 10
-                        """
-                            query_job = client.query(query)
+    query = """
+    SELECT *
+    FROM bigquery-public-data.world_bank_health_population
+    LIMIT 10
+    """
+    query_job = client.query(query)
 
-                                df = query_job.to_dataframe()
-                                    json_object = df.to_json(orient='records')
+    df = query_job.to_dataframe()
+    json_object = df.to_json(orient='records')
 
-                                        return json_object
+    return json_object
 
 
-                                    if __name__ == "__main__":
-                                            app.run(port=8080, host="0.0.0.0")
+if __name__ == "__main__":
+    app.run(port=8080, host="0.0.0.0")
