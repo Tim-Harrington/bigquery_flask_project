@@ -15,8 +15,8 @@ client = bigquery.Client()
 
 query = """
     SELECT *
-    FROM ML.EXPLAIN_FORECAST(MODEL worldpop.yearly_pop,
-            STRUCT(10 AS horizon, 0.8 AS confidence_level))
+    FROM ML.EXPLAIN_FORECAST(MODEL my_models.annual_temp,
+            STRUCT(15 AS horizon, 0.60 AS confidence_level))
 """
 
 query_job = client.query(query) # make an API request
@@ -26,10 +26,10 @@ df = query_job.to_dataframe()
 fig = px.line(df, x='time_series_timestamp', y ='time_series_data')
 
 app.layout = html.Div(children = [
-    html.H1("World Population Forecast"),
-    html.Div(children ='''An app to see what the expected world population will be each year over the next 10 years.'''),
+    html.H1("US Annual Avg Temperature Forecast"),
+    html.Div(children ='''An app to see what the expected US avg yearly temperatures might be over the next 15 years.'''),
     dcc.Graph(
-        id = 'World Population Graph',
+        id = 'US Annual Avg Temp Graph',
         figure = fig
     )
 ])
