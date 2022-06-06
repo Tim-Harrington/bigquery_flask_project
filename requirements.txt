@@ -14,7 +14,7 @@ dash_bootstrap_components
 numpy
 werkzeug
 db_dtypes
-ploty
+plotly
 dash-html-components
 dash-core-components
 dash-table
