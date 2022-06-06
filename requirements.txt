@@ -8,3 +8,17 @@ flask_restful
 google
 google-cloud-bigquery
 google-cloud-bigquery-storage
+dash
+requests
+dash_bootstrap_components
+numpy
+werkzeug
+db_dtypes
+ploty
+dash-html-components
+dash-core-components
+dash-table
+dash-daq
+dash-renderer
+pandas
+
