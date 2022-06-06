@@ -16,7 +16,7 @@ where
 parameter_name = 'Average Ambient Temperature'
 and metric_used = 'observed_values'
 and completeness_indicator = "Y"
-and year between 2000 and 2020
+and year between 1990 and 2020
 group by
 YEAR
 order by
