@@ -1,13 +1,23 @@
-CREATE MODEL `us_models.testing_testing`
-OPTIONS(model_type='logistic_reg') AS
-SELECT
-  IF(totals.transactions IS NULL, 0, 1) AS label,
-  IFNULL(device.operatingSystem, "") AS os,
-  device.isMobile AS is_mobile,
-  IFNULL(geoNetwork.country, "") AS country,
-  IFNULL(totals.pageviews, 0) as pageviews
+CREATE OR REPLACE MODEL `my_models.annual_temp`
+OPTIONS
+  (model_type='ARIMA_PLUS',
+  time_series_timestamp_col = 'YEAR',
+  time_series_data_col = 'avg_temp_CS',
+  auto_arima = TRUE,
+  data_frequency = "AUTO_FREQUENCY",
+  decompose_time_series = TRUE
+  ) AS
 
-FROM
-  `bigquery-public-data.google_analytics_sample.ga_sessions_*`
-WHERE
-  _TABLE_SUFFIX BETWEEN '20160801' AND '20170630'
+select
+avg(arithmetic_mean) as avg_temp_CS
+,YEAR
+FROM `bigquery-public-data.epa_historical_air_quality.air_quality_annual_summary`
+where
+parameter_name = 'Average Ambient Temperature'
+and metric_used = 'observed_values'
+and completeness_indicator = "Y"
+and year between 2000 and 2020
+group by
+YEAR
+order by
+YEAR
